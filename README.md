@@ -27,8 +27,8 @@
     - Player will be opted to choose:
       - Start a new game (inputting username, registering it into database, creating new account)
       - Load existing game (inputting username, validating it in database, loading account if existed)
-      - Read game guide (viewing game guide on how to play)
       - View highscore (display username and highscore list)
+      - Read game guide (viewing game guide on how to play)
       - Quit game (quit game)
 - Each game will last with a 45 second countdown timer, and the score is recorded after the game ends.
 
