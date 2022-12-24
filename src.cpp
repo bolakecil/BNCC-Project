@@ -11,31 +11,6 @@ void printMenu(char arr[]){
     printf ("5. %-20s %c\n", "Quit", arr[4]);
 }
 
-// int moveMenu(char arr[], int pos){
-//    // char move;
-//    switch(int input = getch()){
-//        case 224: //control key for unicode x0
-//            switch (int moveTo = getch()){
-//                case 72:
-//                    if (pos > 0){
-//                        arr[pos] = ' ';
-//                        arr[--pos] = '<'; 
-//                    }
-//                    break;
-
-//                case 80:
-//                    if (pos < 4){
-//                        arr[pos] = ' ';
-//                        arr[++pos] = '<';
-//                    }
-//                    break;
-                   
-//            }
-//        case '\r': pos+=10;
-//    }
-//    return pos;
-// }
-
 int moveMenu(char arr[], int pos){
     switch(char move = getch()){
         case 'w':
