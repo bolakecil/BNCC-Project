@@ -6,13 +6,14 @@ void printMenu(char arr[]){
     system("cls");
     printf ("1. %-20s %c\n", "New Game", arr[0]);
     printf ("2. %-20s %c\n", "Load Game", arr[1]);
-    printf ("3. %-20s %c\n", "How to Play", arr[2]);
-    printf ("4. %-20s %c\n", "View Highscore", arr[3]);
+    printf ("3. %-20s %c\n", "View Highscore", arr[2]);
+    printf ("4. %-20s %c\n", "How To Play", arr[3]);
     printf ("5. %-20s %c\n", "Quit", arr[4]);
 }
 
 int moveMenu(char arr[], int pos){
     switch(char move = getch()){
+        case 'W':
         case 'w':
             if (pos > 0){
                 arr[pos] = ' ';
@@ -20,6 +21,7 @@ int moveMenu(char arr[], int pos){
             }
             break;
         
+        case 'S':
         case 's':
             if (pos < 4){
                 arr[pos] = ' ';
@@ -35,7 +37,6 @@ int moveMenu(char arr[], int pos){
 
 int menu(){
     char cursorMove[5] = {};
-    // for (int i = 0; i < 5; i++) cursorMove[i] = ' ';
     cursorMove[0] = '<';
     int curIdx = 0;
     do{
@@ -49,6 +50,16 @@ int main(){
     int choice = 0;
    do{
         choice = menu();
+        switch(choice){
+            case 10: //start new game
+            
+                break;
+            case 11: //load game
+
+                break;
+            case 12: //ga
+            
+        }
    } while (choice != 14);
     
     return 0;
