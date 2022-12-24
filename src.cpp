@@ -4,11 +4,11 @@
 
 void printMenu(char arr[]){
     system("cls");
-    printf ("1. %-20s %c\n", "New Game", arr[0]);
-    printf ("2. %-20s %c\n", "Load Game", arr[1]);
-    printf ("3. %-20s %c\n", "View Highscore", arr[2]);
-    printf ("4. %-20s %c\n", "How To Play", arr[3]);
-    printf ("5. %-20s %c\n", "Quit", arr[4]);
+    printf("1. %-20s %c\n", "New Game", arr[0]);
+    printf("2. %-20s %c\n", "Load Game", arr[1]);
+    printf("3. %-20s %c\n", "View Highscore", arr[2]);
+    printf("4. %-20s %c\n", "How To Play", arr[3]);
+    printf("5. %-20s %c\n", "Quit", arr[4]);
 }
 
 int moveMenu(char arr[], int pos){
@@ -33,6 +33,23 @@ int moveMenu(char arr[], int pos){
             pos += 10;
     }
     return pos;
+}
+
+void guide(){
+    system("cls");
+    printf("Welcome to Catch The Fruit!\n");
+    printf("In the Lands of Harvest, you are asked to collect the falling fruits.\n");
+    printf("You are also given a basket to store the collected fruits.\n");
+
+    printf("BASICS\n");
+    printf("=====\n\n");
+    printf("General:\n");
+    printf("W - Move basket to the left\n");
+    printf("S - Move basket to the right\n");
+    printf("* Basket level increases by every 150 points milestone, capped at level 3\n");
+    printf("* Game lasts for 45 seconds each round before the score is recorded!\n");
+
+    getchar();
 }
 
 int menu(){
@@ -60,7 +77,7 @@ int main(){
 
                 break;
             case 13: //game guide
-
+                guide();
                 break;
         }
    } while (choice != 14); //quit game
