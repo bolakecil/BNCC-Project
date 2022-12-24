@@ -47,20 +47,23 @@ int menu(){
 }
 
 int main(){
-    int choice = 0;
-   do{
-        choice = menu();
-        switch(choice){
+    int choice;
+    do{
+        switch(choice = menu()){
             case 10: //start new game
             
                 break;
             case 11: //load game
 
                 break;
-            case 12: //ga
-            
+            case 12: //game highscore
+
+                break;
+            case 13: //game guide
+
+                break;
         }
-   } while (choice != 14);
+   } while (choice != 14); //quit game
     
     return 0;
 }
