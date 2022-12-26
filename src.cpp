@@ -35,7 +35,29 @@ int moveMenu(char arr[], int pos){
     return pos;
 }
 
-void guide(){
+void displayHighscore(){
+    FILE *database = fopen("Database.txt", "r");
+    if (database == NULL) printf("Database doesn't exist!\n");
+
+    int size = 0;
+    char buffer[100];
+    while (fscanf(database, "%[^\n]\n", buffer) != EOF) size++;
+	rewind(database);
+    struct player{
+        char name[50];
+        int highscore;
+        int basketLevel;
+    } user[size+5];
+
+    int i = 0;
+    while (fscanf(database, "%[^#]#%d#%d\n", user[i].name, &user[i].highscore, &user[i].basketLevel) != EOF) i++;
+    system("cls");
+    for (int j = 0; j < i; j++) printf ("%s %d %d\n", user[j].name, user[j].highscore, user[j].basketLevel);
+    printf ("ah");
+    getchar();
+}
+
+void displayGuide(){
     system("cls");
     printf("Welcome to Catch The Fruit!\n");
     printf("In the Lands of Harvest, you are asked to collect the falling fruits.\n");
@@ -77,7 +99,7 @@ int main(){
 
                 break;
             case 13: //game guide
-                guide();
+                displayGuide();
                 break;
         }
    } while (choice != 14); //quit game
