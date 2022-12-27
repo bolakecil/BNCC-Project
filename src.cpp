@@ -53,7 +53,7 @@ void displayHighscore(){
     while (fscanf(database, "%[^#]#%d#%d\n", user[i].name, &user[i].highscore, &user[i].basketLevel) != EOF) i++;
     system("cls");
     for (int j = 0; j < i; j++) printf ("%s %d %d\n", user[j].name, user[j].highscore, user[j].basketLevel);
-    printf ("ah");
+    //selection sort using highscore
     getchar();
 }
 
@@ -61,7 +61,7 @@ void displayGuide(){
     system("cls");
     printf("Welcome to Catch The Fruit!\n");
     printf("In the Lands of Harvest, you are asked to collect the falling fruits.\n");
-    printf("You are also given a basket to store the collected fruits.\n");
+    printf("You are also given a basket to store the collected fruits.\n\n");
 
     printf("BASICS\n");
     printf("=====\n\n");
@@ -96,7 +96,7 @@ int main(){
 
                 break;
             case 12: //game highscore
-
+                displayHighscore();
                 break;
             case 13: //game guide
                 displayGuide();
@@ -106,3 +106,4 @@ int main(){
     
     return 0;
 }
+
