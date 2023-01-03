@@ -54,31 +54,32 @@ void displayHighscore(){
     while (fscanf(database, "%[^#]#%d#%d\n", user[i].name, &user[i].highscore, &user[i].basketLevel) != EOF) i++;
     system("cls");
     
-//    int temp;
-//    for (int i = 0; i < size-1; i++){
-//        struct info min = user[i];
-//        for (int j = i; j < size; j++){
-//            if (min.highscore <= user[j].highscore){
-//                min = user[j];
-//                temp = j;
-//            }
-//        }
-//        user[temp] = user[i];
-//        user[i] = min;
-//    }
-
-	for (int i = 0; i < size-1; i++){
-		for (int j = 0; j < size-i-1; j++){
-			if (user[j].highscore < user[j+1].highscore){
-				struct info temp = user[j];
-				user[j] = user[j+1];
-				user[j+1] = temp;
-			}
-		}
-	}
-    
-    for (int j = 0; j < i; j++) printf ("%s %d\n", user[j].name, user[j].highscore);
     //selection sort using highscore
+   int temp;
+   for (int i = 0; i < size-1; i++){
+       struct info min = user[i];
+       for (int j = i; j < size; j++){
+           if (min.highscore <= user[j].highscore){
+               min = user[j];
+               temp = j;
+           }
+       }
+       user[temp] = user[i];
+       user[i] = min;
+   }
+
+	// for (int i = 0; i < size-1; i++){
+	// 	for (int j = 0; j < size-i-1; j++){
+	// 		if (user[j].highscore < user[j+1].highscore){
+	// 			struct info temp = user[j];
+	// 			user[j] = user[j+1];
+	// 			user[j+1] = temp;
+	// 		}
+	// 	}
+	// }
+    printf ("HIGHSCORE\n");
+    printf ("=========\n");
+    for (int j = 0; j < i; j++) printf ("%s %d\n", user[j].name, user[j].highscore);
     fclose(database);
     getchar();
 }
@@ -132,4 +133,3 @@ int main(){
     system("cls");
     return 0;
 }
-
