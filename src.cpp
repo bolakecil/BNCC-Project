@@ -43,7 +43,8 @@ void displayHighscore(){
     char buffer[100];
     while (fscanf(database, "%[^\n]\n", buffer) != EOF) size++;
 	rewind(database);
-    struct player{
+
+    struct info{
         char name[50];
         int highscore;
         int basketLevel;
@@ -52,8 +53,33 @@ void displayHighscore(){
     int i = 0;
     while (fscanf(database, "%[^#]#%d#%d\n", user[i].name, &user[i].highscore, &user[i].basketLevel) != EOF) i++;
     system("cls");
-    for (int j = 0; j < i; j++) printf ("%s %d %d\n", user[j].name, user[j].highscore, user[j].basketLevel);
+    
+//    int temp;
+//    for (int i = 0; i < size-1; i++){
+//        struct info min = user[i];
+//        for (int j = i; j < size; j++){
+//            if (min.highscore <= user[j].highscore){
+//                min = user[j];
+//                temp = j;
+//            }
+//        }
+//        user[temp] = user[i];
+//        user[i] = min;
+//    }
+
+	for (int i = 0; i < size-1; i++){
+		for (int j = 0; j < size-i-1; j++){
+			if (user[j].highscore < user[j+1].highscore){
+				struct info temp = user[j];
+				user[j] = user[j+1];
+				user[j+1] = temp;
+			}
+		}
+	}
+    
+    for (int j = 0; j < i; j++) printf ("%s %d\n", user[j].name, user[j].highscore);
     //selection sort using highscore
+    fclose(database);
     getchar();
 }
 
@@ -103,7 +129,7 @@ int main(){
                 break;
         }
    } while (choice != 14); //quit game
-    
+    system("cls");
     return 0;
 }
 
