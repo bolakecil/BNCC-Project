@@ -33,5 +33,5 @@
 - Each game will last with a 45 second countdown timer, and the score is recorded after the game ends.
 
 ## Contributors:
-  - @bolakecil
-  - @axelnakata
+  - Jessica L
+  - Axel N
