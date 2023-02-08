@@ -1,6 +1,13 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <conio.h>
+
+char map[100][100] = {};
+char basket[10] = "\\___/";
+int basketPos = 15;
+char name [30] = {"Lorem ipsum"};
+int score = 0;
 
 void printMenu(char arr[]){
     system("cls");
@@ -33,6 +40,55 @@ int moveMenu(char arr[], int pos){
             pos += 10;
     }
     return pos;
+}
+
+void setGame(int basketLevel){
+    if (basketLevel == 2) strcpy(basket, "\\____/");
+    else if (basketLevel == 3) strcpy(basket, "\\_____/");
+    for (int i = 0; i < 15; i++){
+        for (int j = 0; j < 35; j++) map[i][j] = ' ';
+    }
+    for (int i = 0; i < strlen(basket); i++) map[14][15+i] = basket[i];
+    basketPos = 15;
+}
+
+void printMap(){
+    system("cls");
+    printf ("\n");
+    for (int i = 0; i < 15; i++){
+        for (int j = 0; j < 35; j++){
+            printf ("%c", map[i][j]);
+        }
+        if (i == 4) printf (" |%s|", name);
+        else if (i == 5) printf (" |%d|", score);
+        printf ("\n");
+    }
+}
+
+int moveBasket(){
+    for (int i = basketPos; i < strlen(basket)+basketPos; i++) map[14][i] = ' ';
+    switch(char move = getch()){
+        case 'A':
+        case 'a':
+            if (basketPos > 0) basketPos--;
+            break;
+        
+        case 'D':
+        case 'd':
+            if (basketPos < 34) basketPos++;
+            break;
+    }
+    for (int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
+}
+
+void gameplay(int basketLevel){
+	setGame(basketLevel);
+    int basketPos = 15, time = 0;
+    while(time < 3){
+        printMap();
+        moveBasket();
+        time++;
+    }
 }
 
 void displayHighscore(){
@@ -68,15 +124,6 @@ void displayHighscore(){
        user[i] = min;
    }
 
-	// for (int i = 0; i < size-1; i++){
-	// 	for (int j = 0; j < size-i-1; j++){
-	// 		if (user[j].highscore < user[j+1].highscore){
-	// 			struct info temp = user[j];
-	// 			user[j] = user[j+1];
-	// 			user[j+1] = temp;
-	// 		}
-	// 	}
-	// }
     printf ("HIGHSCORE\n");
     printf ("=========\n");
     for (int j = 0; j < i; j++) printf ("%s %d\n", user[j].name, user[j].highscore);
@@ -95,8 +142,9 @@ void displayGuide(){
     printf("General:\n");
     printf("W - Move basket to the left\n");
     printf("S - Move basket to the right\n");
-    printf("* Basket level increases by every 150 points milestone, capped at level 3\n");
+    printf("* Basket level increases by every 170 points milestone, capped at level 3\n");
     printf("* Game lasts for 45 seconds each round before the score is recorded!\n");
+    printf("\nGood luck!\n");
 
     getchar();
 }
@@ -117,7 +165,7 @@ int main(){
     do{
         switch(choice = menu()){
             case 10: //start new game
-            
+                gameplay(1);
                 break;
             case 11: //load game
 
