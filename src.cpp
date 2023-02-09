@@ -145,6 +145,45 @@ void gameplay(int basketLevel){
     }
 }
 
+int loadGame(){
+    system("cls");
+    FILE *database = fopen("Database.txt", "r");
+
+    char target[100];
+    printf("Insert player name to load profile: ");
+    scanf("%[^\n]", target); getchar();
+    printf("\n");
+    strupr(target);
+
+    bool isPlayerFound = false;
+    int curBasketLvl = 0;
+
+    while(!feof(database)){
+        char curPlayer[100];
+        int curScore;
+        fscanf(database, "%[^#]#%d#%d\n", curPlayer, &curScore, &curBasketLvl);
+        if(strcmp(curPlayer, target) == 0){
+            puts("Profile Loaded:");
+            printf("Player Name: %s\n", curPlayer);
+            printf("Current Highscore: %d\n", curScore);
+            printf("Current Basket Level: %d\n\n", curBasketLvl);
+            printf("> Welcome back %s, Ready To Play? [Press Any Key to Continue]\n", curPlayer);
+            isPlayerFound = true;
+            strcpy(name, curPlayer); // set to global variable
+            break;
+        }
+    }
+
+    if(!isPlayerFound){
+        printf("> Player profile not found, returning to Main Menu..\n");
+        curBasketLvl = 0;
+    }
+
+    fclose(database);
+    getchar();
+    return curBasketLvl;
+}
+
 void displayHighscore(){
     FILE *database = fopen("Database.txt", "r");
     if (database == NULL) printf("Database doesn't exist!\n");
@@ -218,14 +257,16 @@ int menu(){
 
 int main(){
     srand(time(NULL));
-    int choice;
+    int choice, basketLevel;
     do{
         switch(choice = menu()){
             case 10: //start new game
-                gameplay(1);
+                
                 break;
             case 11: //load game
-
+                basketLevel = loadGame();
+                if (basketLevel != 0) gameplay(basketLevel);
+                // gameplay(1);
                 break;
             case 12: //game highscore
                 displayHighscore();
