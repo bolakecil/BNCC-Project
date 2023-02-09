@@ -17,8 +17,17 @@ struct fruit{
     int point;
 } apple, mango, orange;
 
+void printHeader(){
+    FILE *header = fopen("Title.txt", "r");
+    char buffer[100];
+    while (fscanf(header,"%[^\n]\n", buffer) != EOF) printf ("%s\n", buffer);
+    printf ("\n");
+    fclose(header);
+}
+
 void printMenu(char arr[]){
     system("cls");
+    printHeader();
     printf("1. %-20s %c\n", "New Game", arr[0]);
     printf("2. %-20s %c\n", "Load Game", arr[1]);
     printf("3. %-20s %c\n", "View Highscore", arr[2]);
@@ -169,8 +178,9 @@ void displayHighscore(){
        user[i] = min;
    }
 
-    printf ("HIGHSCORE\n");
-    printf ("=========\n");
+    printHeader();
+    printf ("H I G H S C O R E\n");
+    printf ("=================\n");
     for (int j = 0; j < i; j++) printf ("%s %d\n", user[j].name, user[j].highscore);
     fclose(database);
     getchar();
@@ -178,6 +188,7 @@ void displayHighscore(){
 
 void displayGuide(){
     system("cls");
+    printHeader();
     printf("Welcome to Catch The Fruit!\n");
     printf("In the Lands of Harvest, you are asked to collect the falling fruits.\n");
     printf("You are also given a basket to store the collected fruits.\n\n");
@@ -185,8 +196,8 @@ void displayGuide(){
     printf("BASICS\n");
     printf("=====\n\n");
     printf("General:\n");
-    printf("W - Move basket to the left\n");
-    printf("S - Move basket to the right\n");
+    printf("A - Move basket to the left\n");
+    printf("D - Move basket to the right\n");
     printf("* Basket level increases by every 170 points milestone, capped at level 3\n");
     printf("* Game lasts for 45 seconds each round before the score is recorded!\n");
     printf("\nGood luck!\n");
