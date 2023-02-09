@@ -2,12 +2,20 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <time.h>
 
 char map[100][100] = {};
 char basket[10] = "\\___/";
+int basketWeight = 200; //max basket lv1 capacity
 int basketPos = 15;
 char name [30] = {"Lorem ipsum"};
 int score = 0;
+int weight = 0;
+
+struct fruit{
+    int weight;
+    int point;
+} apple, mango, orange;
 
 void printMenu(char arr[]){
     system("cls");
@@ -42,27 +50,64 @@ int moveMenu(char arr[], int pos){
     return pos;
 }
 
+void setFruit(){
+    apple.point = 50;
+    apple.weight = 20;
+
+    orange.point = 60;
+    orange.weight = 15;
+
+    mango.point =  55;
+    mango.weight = 30; 
+}
+
 void setGame(int basketLevel){
-    if (basketLevel == 2) strcpy(basket, "\\____/");
-    else if (basketLevel == 3) strcpy(basket, "\\_____/");
+    if (basketLevel == 2){
+        strcpy(basket, "\\____/");
+        basketWeight = 270;
+    }
+    else if (basketLevel == 3){
+        strcpy(basket, "\\_____/");
+        basketWeight = 350;
+    }
+    setFruit();
     for (int i = 0; i < 15; i++){
         for (int j = 0; j < 35; j++) map[i][j] = ' ';
     }
-    for (int i = 0; i < strlen(basket); i++) map[14][15+i] = basket[i];
-    basketPos = 15;
+    basketPos = 15; //starting position for basket
+    for (int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
 }
 
-void printMap(){
+void generateFruit(){
+    int spawnPos;
+    do{
+        spawnPos = rand()%35;
+    } while (spawnPos < 0 || spawnPos >= 35);
+
+    int chosenFruit = rand()%3;
+    if (chosenFruit == 1) map[0][spawnPos] = '@'; //apple
+    else if (chosenFruit == 2) map[0][spawnPos] = 'o'; //orange
+    else if (chosenFruit == 3) map[0][spawnPos] = ','; //mango
+    //nanti generate print, kalo misalnya user collect, brrti add in attribute di struct ke total user
+}
+
+void printMap(int timeElapsed){
     system("cls");
     printf ("\n");
     for (int i = 0; i < 15; i++){
         for (int j = 0; j < 35; j++){
             printf ("%c", map[i][j]);
         }
-        if (i == 4) printf (" |%s|", name);
-        else if (i == 5) printf (" |%d|", score);
+        if (i == 4) printf (" %s", name);
+        else if (i == 5) printf (" Score: %d", score);
+        else if (i == 6) printf (" Weight acquired: %d", weight);
+        else if (i == 7) printf (" Time elapsed: %d", timeElapsed);
         printf ("\n");
     }
+}
+
+void moveFruit(){
+    
 }
 
 int moveBasket(){
@@ -75,7 +120,7 @@ int moveBasket(){
         
         case 'D':
         case 'd':
-            if (basketPos < 34) basketPos++;
+            if (basketPos < 34-strlen(basket)) basketPos++;
             break;
     }
     for (int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
@@ -83,11 +128,11 @@ int moveBasket(){
 
 void gameplay(int basketLevel){
 	setGame(basketLevel);
-    int basketPos = 15, time = 0;
-    while(time < 3){
-        printMap();
-        moveBasket();
-        time++;
+    int timeUp = 0;
+    clock_t start = clock();
+    while(weight <= basketWeight && (clock()-start)/CLOCKS_PER_SEC < 45){ //current time elapsed from start
+        printMap((clock()-start)/CLOCKS_PER_SEC);
+        if (kbhit()) moveBasket();
     }
 }
 
@@ -161,6 +206,7 @@ int menu(){
 }
 
 int main(){
+    srand(time(NULL));
     int choice;
     do{
         switch(choice = menu()){
