@@ -31,7 +31,7 @@
       - Read game guide (viewing game guide on how to play)
       - Quit game (quit game)
 - Each game will last with a 45 second countdown timer, and the score is recorded after the game ends.
-- The game will end when player has reached basket's maximum weight capacity.
+- The game will also end when player has reached basket's maximum weight capacity.
 
 ## Contributors:
   - Jessica L
