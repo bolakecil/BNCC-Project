@@ -44,8 +44,25 @@ void printMenu(char arr[]){
     printf("5. %-20s %c\n", "Quit", arr[4]);
 }
 
+int gameOver(int basketLevel){
+	system("cls");
+	printf ("-- GAME OVER --\n");
+	printf ("Username: %s\n", name);
+	printf ("Score: %d\n", score);
+	if (score >= 250){
+		printf ("Basket upgraded to level 2!\n");
+		basketLevel = 2;
+	}
+	if (score >= 350){
+		printf ("Basket upgraded to level 3!\n");
+		basketLevel = 3;
+	}
+	getchar();
+	return basketLevel;
+}
+
 int moveMenu(char arr[], int pos){
-    switch(char move = getch()){
+    switch(getch()){
         case 'W':
         case 'w':
             if (pos > 0){
@@ -93,7 +110,60 @@ void setGame(int basketLevel){
         for (int j = 0; j < 35; j++) map[i][j] = ' ';
     }
     basketPos = 15; //starting position for basket
-    for (int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
+    score = 0;
+    weight = 0;
+    for (unsigned int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
+    //diganti jadi unsigned supaya ilangin compiler warning, krn memang beda comparison (tp sblmnya gada??)
+}
+
+void storeScore(int basketLevel){ //inget pass basketLevel
+    FILE *database = fopen("Database.txt", "r");
+    FILE *temp = fopen("Temp.txt", "w");
+
+    if (database == NULL || temp == NULL){
+        printf("Error Opening file(s).\n");
+        return;
+    }
+
+    bool isPlayerFound = false, isNewHighScore = false;
+
+    while(!feof(database)){
+        char curPlayer[100];
+        int curScore;
+        int curBasketLvl;
+        fscanf(database, "%[^#]#%d#%d\n", curPlayer, &curScore, &curBasketLvl);
+
+        if(strcmp(curPlayer, name) == 0){ // if found same player
+            if(score > curScore){ // if reach new high score
+                fprintf(temp, "%s#%d#%d\n", curPlayer, score, basketLevel);
+                isNewHighScore = true;
+            }
+            else{ // else not high score
+                fprintf(temp, "%s#%d#%d\n", curPlayer, curScore, basketLevel);
+            }
+            isPlayerFound = true;
+        }
+        else{ // else copy data like normal
+            fprintf(temp, "%s#%d#%d\n", curPlayer, curScore, curBasketLvl);
+        }
+    }
+
+    if(!isPlayerFound){ // if no player found, add new data to the list
+        fprintf(temp, "%s#%d#%d\n", name, score, basketLevel);
+    }
+
+    fclose(temp);
+    fclose(database);
+
+    remove("Database.txt");
+    rename("Temp.txt", "Database.txt");
+
+    if(!isPlayerFound || isNewHighScore){
+        system("cls");
+        printf("> Congratulation, you have reached a new high score of %d!\n", score);
+        puts("> Your new high score have been stored in the database, you can check it in the high score menu.");
+        getchar();
+    }
 }
 
 void printMap(int timeElapsed){
@@ -112,7 +182,7 @@ void printMap(int timeElapsed){
 }
 
 void delay(){
-    for (int i = 0; i < 100000; i++);
+    for (int i = 0; i < 10000000; i++);
 }
 
 void generateFruit(){
@@ -128,19 +198,38 @@ void generateFruit(){
     //nanti generate print, kalo misalnya user collect, brrti add in attribute di struct ke total user
 }
 
-void moveFruit(){
-    for (int i = 1; i < 14; i++){
-        for (int j = 0; j < 35; j++){
-            char temp = map[i][j];
-            map[i][j] = map[i-1][j];
-            map[i-1][j] = temp;
+void checkFruit(){
+    for (int i = 0; i < 35; i++){
+        if (map[14][i] != ' '){
+            if (map[13][i] == '@'){ //collects apple
+                weight += apple.weight;
+                score += apple.point;
+                break;
+            }
+            else if (map[13][i] == 'o'){ //collects orange
+                weight += orange.weight;
+                score += orange.point;
+                break;
+            }
+            else if (map[13][i] == ','){ //collects mango
+                weight += mango.weight;
+                score = mango.point;
+                break;
+            }
         }
     }
 }
 
-int moveBasket(){
-    for (int i = basketPos; i < strlen(basket)+basketPos; i++) map[14][i] = ' ';
-    switch(char move = getch()){
+void moveFruit(){
+    for (int i = 13; i >= 1; i--){
+        strcpy(map[i], map[i-1]);
+        strcpy(map[i-1], "                                   ");
+    }
+}
+
+void moveBasket(){
+    for (unsigned int i = basketPos; i < strlen(basket)+basketPos; i++) map[14][i] = ' ';
+    switch(getch()){
         case 'A':
         case 'a':
             if (basketPos > 0) basketPos--;
@@ -148,73 +237,33 @@ int moveBasket(){
         
         case 'D':
         case 'd':
-            if (basketPos < 34-strlen(basket)) basketPos++;
+            if ((unsigned int) basketPos < 34-strlen(basket)) basketPos++;
             break;
     }
-    for (int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
+    for (unsigned int i = 0; i < strlen(basket); i++) map[14][basketPos+i] = basket[i];
 }
 
 void gameplay(int basketLevel){
 	setGame(basketLevel);
-    int timeUp = 0;
     clock_t start = clock();
+    clock_t generatetimer = clock();
+    clock_t movetimer = clock();
     while(weight <= basketWeight && (clock()-start)/CLOCKS_PER_SEC < 45){ //current time elapsed from start
+        if (((clock()-generatetimer)/CLOCKS_PER_SEC) == 2){
+            generateFruit();
+            generatetimer = clock();
+        }
+        if (((clock()-movetimer)/CLOCKS_PER_SEC) == 1){
+            moveFruit();
+            checkFruit();
+            movetimer = clock();
+        }
         printMap((clock()-start)/CLOCKS_PER_SEC);
-        delay();
         if (kbhit()) moveBasket();
-        moveFruit();
     }
+    int basketCheckLevel = gameOver(basketLevel);
+    storeScore(basketCheckLevel);
 }
-
-// void storeScore(){ //inget pass basketLevel
-//     FILE *database = fopen("Database.txt", "r");
-//     FILE *temp = fopen("Temp.txt", "w");
-
-//     if (database == NULL || temp == NULL){
-//         printf("Error Opening file(s).\n");
-//         return;
-//     }
-
-//     bool isPlayerFound = false, isNewHighScore = false;
-
-//     while(!feof(database)){
-//         char curPlayer[100];
-//         int curScore;
-//         int curBasketLvl;
-//         fscanf(database, "%[^#]#%d#%d\n", curPlayer, &curScore, &curBasketLvl);
-
-//         if(strcmp(curPlayer, name) == 0){ // if found same player
-//             if(score > curScore){ // if reach new high score
-//                 fprintf(temp, "%s#%d#%d\n", curPlayer, score, curBasketLvl);
-//                 isNewHighScore = true;
-//             }
-//             else{ // else not high score
-//                 fprintf(temp, "%s#%d#%d\n", curPlayer, curScore, curBasketLvl);
-//             }
-//             isPlayerFound = true;
-//         }
-//         else{ // else copy data like normal
-//             fprintf(temp, "%s#%d#%d\n", curPlayer, curScore, curBasketLvl);
-//         }
-//     }
-
-//     if(!isPlayerFound){ // if no player found, add new data to the list
-//         fprintf(temp, "%s#%d#%d\n", name, score, basketLevel);
-//     }
-
-//     fclose(temp);
-//     fclose(database);
-
-//     remove("Database.txt");
-//     rename("Temp.txt", "Database.txt");
-
-//     if(!isPlayerFound || isNewHighScore){
-//         system("cls");
-//         printf("> Congratulation, you have reached a new high score of %d!\n", score);
-//         puts("> Your new high score have been stored in the database, you can check it in the high score menu.");
-//         getchar();
-//     }
-// }
 
 int newGame(){
     system("cls");
@@ -339,7 +388,7 @@ void displayGuide(){
     printf("General:\n");
     printf("A - Move basket to the left\n");
     printf("D - Move basket to the right\n");
-    printf("* Basket level increases by every 170 points milestone, capped at level 3\n");
+    printf("* Basket level increases if you reached minimum points, capped at level 3\n");
     printf("* Game lasts for 45 seconds each round before the score is recorded!\n");
     printf("\nGood luck!\n");
 
