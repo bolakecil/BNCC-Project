@@ -359,10 +359,14 @@ void displayHighscore(){
    for (int i = 0; i < size-1; i++){
        struct info min = user[i];
        for (int j = i; j < size; j++){
-           if (min.highscore <= user[j].highscore){
+           if (min.highscore < user[j].highscore){
                min = user[j];
                temp = j;
            }
+            else if (min.highscore == user[j].highscore && (strcmp(min.name, user[j].name) >= 0)){ // if there is collision of same score
+                min = user[j];
+                temp = j;
+            }
        }
        user[temp] = user[i];
        user[i] = min;
