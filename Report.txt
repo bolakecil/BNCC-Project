@@ -40,12 +40,14 @@ Contributors:
 	- Designing game and constructing gameplay mechanism by utilizing loop (to control gameplay in repeat),
 	selection (to define alternative processes in gameplay), and struct (to store fruit data)
   - Axel N
-	- Designing and constructing database system by utilizing loop (to control file processing flow), selection
+	- Designing and constructing database system by utilizing file (to store user data),loop (to control file processing flow), selection
 	(to control alternative processes and perform checking), and struct (to store temporary user data)
 
 
-This game is made to fulfill necessary requirements in completing C programming language LnT Class. Furthermore, this
-game also represents our desire to create a simple yet fun game to be enjoyed by everyone.
+This game is made to fulfill necessary requirements in completing C programming language LnT Class. Furthermore,
+it also represents our desire to create a simple yet fun game to be enjoyed by everyone.
+
+Link to Gameplay Demo and Explanation: https://youtu.be/TKCzpFm05TE
 
 
 10:26 PM 2/17/2023
